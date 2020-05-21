@@ -24,7 +24,7 @@
 	</div>
 <script type="text/javascript">
 
-var bosNeighborhoods='https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/nyc_zip_code_tabulation_areas_polygons.geojson'
+var nyczip='https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/blogdata_nyc0401.geojson'
 
 var bos311url = "https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/blogdata_nyc.csv"
 
@@ -55,38 +55,49 @@ var color = d3.scaleQuantize()
 var posi_test=d3.map();
 var test_income=d3.map();
 
-
 var promises = [
-                d3.json(bosNeighborhoods),
+                d3.json(nyczip),
                 d3.csv(bos311url, function(d) {
 
                     posi_test.set(d.zipcode, +d.qdiffposi_test);
                     test_income.set(d.zipcode, +d.qdifftest_income);})
                     ]
 
-Promise.all(promises).then(ready)
-
-
-function ready(nycNeighbor) {
-    console.log(Object.values(test_income))
-    console.log(topojson.feature(nycNeighbor, nycNeighbor))
-    // var nyc=nycNeighbor[0]
-    // var test=bosNeighbor[1]
-
+d3.json(nyczip).then(function(zipshape){
+    console.log(zipshape.features)
     svg.append("g")
-        .selectAll("path")
-        .data(topojson.feature(nycNeighbor, nycNeighbor))
-		.enter().append("path")
-        .attr("stroke",'black')
-		.attr("fill", function(d) { 
-            console.log("d: ",test_income)
-            //console.log(bostwitter)
+    .selectAll("path")
+    .data(zipshape.features)
+    .enter()
+    .enter().append("path")
+    .attr('fill', 'black')
+    .attr("d", geoPath)
+
+})
+
+// Promise.all(promises).then(ready)
+
+
+// function ready(nycNeighbor) {
+//     console.log(Object.values(test_income))
+//     console.log(topojson.feature(nycNeighbor, nycNeighbor))
+//     // var nyc=nycNeighbor[0]
+//     // var test=bosNeighbor[1]
+
+//     svg.append("g")
+//         .selectAll("path")
+//         .data(topojson.feature(nycNeighbor, nycNeighbor))
+// 		.enter().append("path")
+//         .attr("stroke",'black')
+// 		.attr("fill", function(d) { 
+//             console.log("d: ",test_income)
+//             //console.log(bostwitter)
             
-            return color(d.test_income = test_income.get(d.properties.ZIPCODE)) })
-		.attr("d", geoPath)
+//             return color(d.test_income = test_income.get(d.properties.ZIPCODE)) })
+// 		.attr("d", geoPath)
 
 
-	}
+// 	}
 
 
 
