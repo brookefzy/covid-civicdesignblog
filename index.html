@@ -2,13 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>D3 Map</title>
+    <title>NYCzip
+
+    </title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-
+    <!-- <script src="https://d3js.org/topojson.v2.js"></script> -->
     <script src="https://d3js.org/topojson.v2.min.js"></script>
-
+<!--    <script src="boston_neighborhoods.json"></script> -->
 
    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<!--    <script src="boston_311.csv"></script> -->
 
     <style>
  	
@@ -21,14 +24,14 @@
 	</div>
 <script type="text/javascript">
 
-var bosNeighborhoods='https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/ZIP_CODE_040114.json'
+var bosNeighborhoods='https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/ZIP_CODE_040114.geojson'
 
 var bos311url = "https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/blogdata_nyc.csv"
 
 
 
-var width = 700
-var height = 500
+var width = 2700
+var height = 900
 
 var svg = d3.select("body").append("svg")
                     .attr("width", width)
@@ -36,10 +39,10 @@ var svg = d3.select("body").append("svg")
 	
 
 var albersProjection = d3.geoAlbers()
-	.scale(190000)
-	.rotate([71.057, 0])
-	.center([0,42.313])
-	.translate([width/2, height/2])
+  .scale(90000)
+  .rotate([74.06, 0])
+  .center([0,40.88])
+  .translate([width/10, height/10])
 	
 var geoPath = d3.geoPath()
 	.projection(albersProjection)
@@ -51,30 +54,61 @@ var color = d3.scaleQuantize()
 
 var bostwitter=d3.map();
 
+
 var promises = [
                 d3.json(bosNeighborhoods),
-                d3.csv(bos311url, function(d) {bostwitter.set(d.Name, +d.twitter);})
+                d3.csv(bos311url, function(d) {bostwitter.set(d.zipcode, +d.test_pop);})
                     ]
 
 Promise.all(promises).then(ready)
 
+// Promise.all(promises).then(function(data){
+//     var nyc=data[0]
+//     var test=data[1]
+//     nycshp={}
+
+//     for (i=0; i<length(nyc.features);i++) {
+//         var zipcode=nyc.features[i].properties.ZIPCODE
+//         nycshp
+
+//     }
+
+
+
+//     console.log(nyc.features[0].properties.ZIPCODE)
+//     svg.append("path")
+//         .attr("d", geoPath(nyc))
+//         .attr("fill",function(d) { 
+//             console.log()
+//             // console.log("d: ",bostwitter.get(d.features))
+//             //console.log(bostwitter)
+            
+//             return color(d.twitter = bostwitter.get(d.features.properties.ZIPCODE)) })
+//         .attr("stroke","white")
+// })
+
 
 
 function ready([bosNeighbor]) {
-    console.log(bosNeighbor.objects.boston_neigh)
+    // console.log(bosNeighbor)
+    var nyc=bosNeighbor
+    // var test=bosNeighbor[1]
 
 
 
-    svg.append("g")
-        .selectAll("path")
-        .data(topojson.feature(bosNeighbor, bosNeighbor.objects.boston_neigh).features)
-		.enter().append("path")
+    svg.append("path")
+
+        .attr("d", geoPath(nyc))
+        .data(nyc.features)
+		// console.log(nyc.features)
 		.attr("fill", function(d) { 
-            console.log("d: ",bostwitter.get(d.properties.Name))
+            console.log(d.properties)
+            console.log("d: ",bostwitter.get(d.properties.ZIPCODE))
             //console.log(bostwitter)
             
-            return color(d.twitter = Math.log(bostwitter.get(d.properties.Name))) })
-		.attr("d", geoPath)
+            return color(d.twitter = bostwitter.get(d.properties.ZIPCODE)) })
+        .enter().append("path")
+
 
 	}
 
