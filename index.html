@@ -48,7 +48,7 @@ var geoPath = d3.geoPath()
 	.projection(albersProjection)
 
 var color = d3.scaleQuantize()
-    .domain([0, 5.5]) 
+    .domain([0, 200000]) 
     .range(d3.schemePurples[9]);
 
 
@@ -89,9 +89,9 @@ Promise.all(promises).then(ready)
 
 
 
-function ready([bosNeighbor]) {
+function ready(bosNeighbor) {
     // console.log(bosNeighbor)
-    var nyc=bosNeighbor
+    var nyc=bosNeighbor[0]
     // var test=bosNeighbor[1]
 
 
@@ -100,13 +100,15 @@ function ready([bosNeighbor]) {
 
         .attr("d", geoPath(nyc))
         .data(nyc.features)
+        .attr("stroke","white")
 		// console.log(nyc.features)
 		.attr("fill", function(d) { 
-            console.log(d.properties)
-            console.log("d: ",bostwitter.get(d.properties.POPULATION))
+            console.log(nyc.features)
+            console.log(d.properties.POPULATION)
+            // console.log("d: ",bostwitter.get(d.POPULATION))
             //console.log(bostwitter)
             
-            return color(d.POPULATION) })
+            return color(d.properties.POPULATION)})
         .enter().append("path")
 
 
