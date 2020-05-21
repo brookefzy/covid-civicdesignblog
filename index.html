@@ -24,7 +24,7 @@
 	</div>
 <script type="text/javascript">
 
-var bosNeighborhoods='https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/ZIP_CODE_040114.geojson'
+var bosNeighborhoods='https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/blogdata_nyc.geojson'
 
 var bos311url = "https://raw.githubusercontent.com/brookefzy/covid-civicdesignblog/master/data/blogdata_nyc.csv"
 
@@ -103,10 +103,10 @@ function ready([bosNeighbor]) {
 		// console.log(nyc.features)
 		.attr("fill", function(d) { 
             console.log(d.properties)
-            console.log("d: ",bostwitter.get(d.properties.ZIPCODE))
+            console.log("d: ",bostwitter.get(d.properties.POPULATION))
             //console.log(bostwitter)
             
-            return color(d.twitter = bostwitter.get(d.properties.ZIPCODE)) })
+            return color(d.POPULATION) })
         .enter().append("path")
 
 
